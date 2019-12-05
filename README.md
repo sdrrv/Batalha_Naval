@@ -1,2 +1,0 @@
-# Batalha_Naval
-SOMOS UM MAXIMO ENGENHARIA

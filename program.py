@@ -1,7 +1,5 @@
 import comandos as cm
 
-jogo_em_curso=False #global variable
-
 def consola(): #Consola
     line=input()
     command=line.split()
@@ -22,9 +20,11 @@ def consola(): #Consola
     elif command[0] == "EJ":
         if len(command)!=2:
             print("Instrução inválida.")
-        elif cm.jogador_em_jogo(command[1]):
+            
+        elif cm.existe_jogador_em_jogo(command[1]):
             print("Jogador participa no jogo em curso.")
-        elif  cm.Existe_Jogador(command[1]) and not cm.jogador_em_jogo(command[1]):
+
+        elif  cm.Existe_Jogador(command[1]) and not cm.existe_jogador_em_jogo(command[1]):
             cm.Remover_Jogadores(command[1])
             print('Jogador removido com sucesso.')
         else:
@@ -40,16 +40,12 @@ def consola(): #Consola
         if len(command)!=3:
             print("Instrução inválida.")
         else:
-            global jogo_em_curso
-            cm.Iniciar_Jogo(command[1],command[2],jogo_em_curso)
-            jogo_em_curso=True
-        
-
+            cm.Iniciar_Jogo(command[1],command[2])
 
     
     else:
         print("Instrução inválida.")
-        
+
 
 #-----------------------------------------------------------------------
 
