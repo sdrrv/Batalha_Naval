@@ -1,6 +1,9 @@
 import comandos as cm
 
 def consola(): #Consola
+    DG=cm.DG
+    #-----------------------------------------------
+
     line=input()
     command=line.split()
 
@@ -11,8 +14,8 @@ def consola(): #Consola
     if command[0]=="RJ":
         if len(command)!=2:
             print("Instrução inválida.")
-        elif not cm.Existe_Jogador(command[1]):                
-            cm.Registar_Jogadores(command[1])
+        elif not cm.Existe_Jogador(DG,command[1]):                
+            cm.Registar_Jogadores(DG,command[1])
             print("Jogador registado com sucesso.")
         else:
             print("Jogador existente.")
@@ -21,11 +24,11 @@ def consola(): #Consola
         if len(command)!=2:
             print("Instrução inválida.")
             
-        elif cm.existe_jogador_em_jogo(command[1]):
+        elif cm.existe_jogador_em_jogo(DG,command[1]):
             print("Jogador participa no jogo em curso.")
 
-        elif  cm.Existe_Jogador(command[1]) and not cm.existe_jogador_em_jogo(command[1]):
-            cm.Remover_Jogadores(command[1])
+        elif  cm.Existe_Jogador(DG,command[1]) and not cm.existe_jogador_em_jogo(DG,command[1]):
+            cm.Remover_Jogadores(DG,command[1])
             print('Jogador removido com sucesso.')
         else:
             print('Jogador não existente.')
@@ -34,13 +37,13 @@ def consola(): #Consola
         if len(command)!=1:
             print("Instrução inválida.")
         else:
-            cm.Listar_Jogadores()
+            cm.Listar_Jogadores(DG)
 
     elif command[0] == 'IJ':
         if len(command)!=3:
             print("Instrução inválida.")
         else:
-            cm.Iniciar_Jogo(command[1],command[2])
+            cm.Iniciar_Jogo(DG,command[1],command[2])
 
     
     else:
