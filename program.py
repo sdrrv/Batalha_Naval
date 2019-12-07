@@ -36,16 +36,19 @@ def consola(): #Consola
     elif command[0]=="LJ":
         if len(command)!=1:
             print("Instrução inválida.")
+        elif cm.sort_jogadores(DG):
+            Lista=cm.Listar_Jogadores(DG)
+            for jogador in Lista:
+                print( jogador, DG["jogadores"][jogador]["Jogos"], DG["jogadores"][jogador]["vitorias"])
         else:
-            cm.Listar_Jogadores(DG)
+            print("Não existem jogadores registados.")
 
     elif command[0] == 'IJ':
         if len(command)!=3:
-            print("Instrução inválida.")
+            print("Instrução inválida.")        
         else:
-            cm.Iniciar_Jogo(DG,command[1],command[2])
-
-    
+            print(cm.Iniciar_Jogo(DG,command[1],command[2]))
+            
     else:
         print("Instrução inválida.")
 
