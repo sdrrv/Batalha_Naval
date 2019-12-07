@@ -43,21 +43,20 @@ def sort_jogadores(DG):
     return sorted(DG["jogadores"].keys())
 
 def Listar_Jogadores(DG):
-    if sort_jogadores(DG):
-        for i in sort_jogadores(DG):
-            print( i, DG["jogadores"][i]["Jogos"], DG["jogadores"][i]["vitorias"])
-    else:
-        print("Não existem jogadores registados.")
+    Lista=[]
+    for i in sort_jogadores(DG):
+        Lista.append(i)
+    return Lista
                   
 
 def Iniciar_Jogo(DG,nome1,nome2):
     if DG["jogo_em_curso"]==True:
-        print("Existe um jogo em curso.")
+        return("Existe um jogo em curso.")
 
     elif Existe_Jogador(DG, nome1) and Existe_Jogador(DG, nome2):
         DG["jogadores_em_jogo"]=sorted([nome1,nome2])
-        print(f'Jogo iniciado entre {DG["jogadores_em_jogo"][0]} e {DG["jogadores_em_jogo"][1]}.')
         DG["jogo_em_curso"]=True
+        return(f'Jogo iniciado entre {DG["jogadores_em_jogo"][0]} e {DG["jogadores_em_jogo"][1]}.')
     else:
-        print("Jogadores não registados.")
+        return("Jogadores não registados.")
      
