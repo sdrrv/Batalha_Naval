@@ -21,36 +21,26 @@ Dicionario_Geral=DG={
         "L":{
             "nome":"Lancha",
             "tamanho":1,
-            "quantidade":4,
-            "navios_colocados":4
         },
 
         "S":{
             "nome":"Submarino",
             "tamanho": 2,
-            'quantidade':3,
-            "navios_colocados":3
         },
 
         "F":{
             "nome":"Fragata",
             "tamanho":3,
-            "quantidade":2,
-            "navios_colocados":2
         },
 
         "C":{
             "nome":"Cruzador",
             "tamanho": 4,
-            'quantidade':1,
-            "navios_colocados":1
         },
         
         "P":{
             "codigo":"Porta Avioes",
             "tamanho": 5,
-            'quantidade':1,
-            "navios_colocados":1
         }
 
     }
@@ -198,7 +188,7 @@ def verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientacao,nome):
     tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
 
     for i in range(0,tamanho):               #Delimita o espaço de jogo.
-        if orientacao=="O":
+        if orientacao=="O" or orientacao=="não_tem":
             if posiçao[1]-i <0 or (tabuleiro[posiçao[0]] [posiçao[1]-i]=="x" or tabuleiro[posiçao[0]] [posiçao[1]] in list(DG["Frota"].keys())):
                 permite=False
         elif orientacao=="E":
@@ -215,24 +205,25 @@ def verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientacao,nome):
 
 
 
-def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao):
+def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao="não_tem"):
     if DG["jogo_em_curso"]==False:
         return("Não existe um jogo em curso.")
-
-    if existe_jogador_em_jogo(DG,nome):
+    elif tipo!="L" and orientaçao=="não_tem":
+        return('Instrução inválida')
+    elif existe_jogador_em_jogo(DG,nome):
         tamanho=DG["Frota"][tipo]["tamanho"]
         posiçao=[linha-1,translator(coluna)]
         if verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientaçao,nome):
             if DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]>0:
                 DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]-=1
                 for i in range(0,tamanho):
-                    if orientaçao=="O":
+                    if orientaçao=="O" or orientaçao=="não_tem":
                         bloco(DG,nome,posiçao[0],posiçao[1]-i,tipo,orientaçao)
-                    if orientaçao=="E":
+                    elif orientaçao=="E":
                         bloco(DG,nome,posiçao[0],posiçao[1]+i,tipo,orientaçao)
-                    if orientaçao=="S":
+                    elif orientaçao=="S":
                         bloco(DG,nome,posiçao[0]+i,posiçao[1],tipo,orientaçao)
-                    if orientaçao=="N":
+                    elif orientaçao=="N":
                         bloco(DG,nome,posiçao[0]-i,posiçao[1],tipo,orientaçao)
                 return("Navio colocado com sucesso.")
             else:

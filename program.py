@@ -57,12 +57,12 @@ def consola(): #Consola
             #print(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["Frota"])
     
     elif command[0] == 'CN':
-        if len(command)!=5 and len(command)!=6:
-            print('Instrução inválida')
-        else:
+        if command[2]=="L" and len(command)==5:
+            print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4]))
+        elif len(command)==6:
             print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4],command[5]))
-                
-           
+        else:
+            print('Instrução inválida')
 
 
 
