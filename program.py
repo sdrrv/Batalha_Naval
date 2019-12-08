@@ -10,7 +10,6 @@ def consola(): #Consola
     if not line: # Sai do programa se o input for Nulo ou seja inexistente
         exit(0)
 
-
     if command[0]=="RJ":
         if len(command)!=2:
             print("Instrução inválida.")
@@ -48,10 +47,28 @@ def consola(): #Consola
             print("Instrução inválida.")        
         else:
             print(cm.Iniciar_Jogo(DG,command[1],command[2]))
-            
+    
+    elif command[0] == "print": #DEBUGING COMMAND
+        if len(command)!=2:
+            print("Instrução invalida.")
+
+        else:
+            cm.print_tabuleiro(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["tabuleiro"] )
+            #print(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["Frota"])
+    
+    elif command[0] == 'CN':
+        if len(command)!=5 and len(command)!=6:
+            print('Instrução inválida')
+        else:
+            print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4],command[5]))
+                
+           
+
+
+
     else:
         print("Instrução inválida.")
-
+    
 
 #-----------------------------------------------------------------------
 
