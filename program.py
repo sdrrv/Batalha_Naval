@@ -49,17 +49,21 @@ def consola(): #Consola
         else:
             print(cm.Iniciar_Jogo(DG,command[1],command[2]))
     
-    elif command[0] == "print":
+    elif command[0] == "print": #DEBUGING COMMAND
         if len(command)!=2:
             print("Instrução invalida.")
 
         else:
-            #cm.print_tabuleiro(cm.DG["jogadores_em_jogo"][list ( cm.DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["tabuleiro"] )
-            print(cm.DG["jogadores_em_jogo"][list ( cm.DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["Frota"])
+            cm.print_tabuleiro(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["tabuleiro"] )
+            #print(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["Frota"])
     
     elif command[0] == 'CN':
-        if len(command) != 5:
-            print('Instrução inválida')   
+        if len(command)!=5 and len(command)!=6:
+            print('Instrução inválida')
+        else:
+            print(cm.Colocar_Navios(DG))
+                
+           
             
 
 

@@ -21,31 +21,36 @@ Dicionario_Geral=DG={
         "L":{
             "nome":"Lancha",
             "tamanho":1,
-            "quantidade":4
+            "quantidade":4,
+            "navios_colocados":4
         },
 
         "S":{
             "nome":"Submarino",
             "tamanho": 2,
-            'quantidade':3
+            'quantidade':3,
+            "navios_colocados":3
         },
 
         "F":{
             "nome":"Fragata",
             "tamanho":3,
-            "quantidade":2
+            "quantidade":2,
+            "navios_colocados":2
         },
 
         "C":{
             "nome":"Cruzador",
             "tamanho": 4,
-            'quantidade':1
+            'quantidade':1,
+            "navios_colocados":1
         },
         
         "P":{
             "codigo":"Porta Avioes",
             "tamanho": 5,
-            'quantidade':1
+            'quantidade':1,
+            "navios_colocados":1
         }
 
     }
@@ -73,7 +78,7 @@ def existe_jogador_em_jogo(DG, nome):
     return False
     
 
-def Remover_Jogadores(DG, nome):          #Retira o jogador do dicionário 
+def Remover_Jogadores(DG, nome):          #Retira o jogador do dicionário.
     del DG["jogadores"][nome]
     
 
@@ -120,6 +125,43 @@ def print_tabuleiro(tabuleiro):
             print(f"[{tabuleiro[linha][coluna]}]", end="")
         print()
 
+def translator(letra):                      #Traduz uma letra para uma posição index da lista.
+    return ord(letra)-97
 
-def Inicia_Combate(DG):
-     pass
+def verificar_posiçao(DG,nome,tipo,linha,coluna,orientacao):
+    tamanho=DG["Frota"][tipo]["tamanho"]
+    permite=True
+    posiçao=[linha-1,translator(coluna)]
+
+    for i in range(0,tamanho):               #Delimita o espaço de jogo.
+        if orientacao=="O":
+            if posiçao[1]-i <0:
+                permite=False
+        if orientacao=="E":
+            if posiçao[1]+i >9:
+                permite=False
+        if orientacao=="S":
+            if posiçao[0]+i >9:
+                permite=False
+        if orientacao=="N":
+            if posiçao[0]-i <0:
+                permite=False
+    if permite==True:
+        pass
+
+    return permite
+
+
+
+def Colocar_Navios(DG,nome,tipo,linha,coluna,orientacao):
+    if DG["jogo_em_curso"]==False:
+        return("Não existe um jogo em curso.")
+    if existe_jogador_em_jogo(DG,nome):
+
+
+        pass
+    else:
+        print("Jogador não participa no jogo em curso.")
+
+
+#print(verificar_posiçao(DG,"D","F",1,"A","N"))
