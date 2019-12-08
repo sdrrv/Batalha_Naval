@@ -126,12 +126,23 @@ def print_tabuleiro(tabuleiro):
         print()
 
 def translator(letra):                      #Traduz uma letra para uma posição index da lista.
-    return ord(letra)-97
+    return ord(letra)-65
 
-def verificar_posiçao(DG,nome,tipo,linha,coluna,orientacao):
+def bloco(DG,nome,linha,coluna,tipo,orientacao): #Cria blocos á volta da posição pretendida, impedindo assim a colocação de navios nas redondesas desse navio
+    a=[[0,1],[0,-1],[1,0],[-1,0],[-1,-1],[1,-1],[1,1],[-1,1]]
+    tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
+    posiçao=[linha,coluna]
+    tabuleiro[posiçao[0]] [posiçao[1]]=tipo
+    for i in a:
+        if not posiçao[0]+i[0]<0 and not posiçao[0]+i[0]>9  and not posiçao[1]+i[1]<0 and  not posiçao[1]+i[1]>9:
+            if tabuleiro[posiçao[0]+i[0]] [posiçao[1]+i[1]]==0:
+                tabuleiro[posiçao[0]+i[0]] [posiçao[1]+i[1]]="x"
+
+
+def verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientacao):
     tamanho=DG["Frota"][tipo]["tamanho"]
     permite=True
-    posiçao=[linha-1,translator(coluna)]
+    posiçao=[linha,coluna]
 
     for i in range(0,tamanho):               #Delimita o espaço de jogo.
         if orientacao=="O":
@@ -146,22 +157,27 @@ def verificar_posiçao(DG,nome,tipo,linha,coluna,orientacao):
         if orientacao=="N":
             if posiçao[0]-i <0:
                 permite=False
-    if permite==True:
-        pass
 
     return permite
 
 
 
-def Colocar_Navios(DG,nome,tipo,linha,coluna,orientacao):
+def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao):
     if DG["jogo_em_curso"]==False:
         return("Não existe um jogo em curso.")
     if existe_jogador_em_jogo(DG,nome):
+        tamanho=DG["Frota"][tipo]["tamanho"]
+        posiçao=[linha-1,translator(coluna)]
+        for i in range(0,tamanho):
+            if orientaçao=="O":
+                bloco(DG,nome,posiçao[0],posiçao[1]-i,tipo,orientaçao)
+            if orientaçao=="E":
+                bloco(DG,nome,posiçao[0],posiçao[1]+i,tipo,orientaçao)
+            if orientaçao=="S":
+                bloco(DG,nome,posiçao[0]+i,posiçao[1],tipo,orientaçao)
+            if orientaçao=="N":
+                bloco(DG,nome,posiçao[0]-i,posiçao[1],tipo,orientaçao)
+        return("Navio colocado com sucesso.")
 
-
-        pass
     else:
         print("Jogador não participa no jogo em curso.")
-
-
-#print(verificar_posiçao(DG,"D","F",1,"A","N"))

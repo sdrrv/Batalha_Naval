@@ -10,7 +10,6 @@ def consola(): #Consola
     if not line: # Sai do programa se o input for Nulo ou seja inexistente
         exit(0)
 
-
     if command[0]=="RJ":
         if len(command)!=2:
             print("Instrução inválida.")
@@ -61,16 +60,14 @@ def consola(): #Consola
         if len(command)!=5 and len(command)!=6:
             print('Instrução inválida')
         else:
-            print(cm.Colocar_Navios(DG))
+            print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4],command[5]))
                 
            
-            
 
 
 
     else:
         print("Instrução inválida.")
-    
     
 
 #-----------------------------------------------------------------------
