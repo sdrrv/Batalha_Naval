@@ -104,9 +104,61 @@ def Iniciar_Jogo(DG,nome1,nome2):
 
         DG["jogadores_em_jogo"][lista_sort[1]]={"tabuleiro":[[0 for _ in range(0,10)] for _ in range(0,10)]}
         #-------------------------Criar Frota--------------------
-        DG["jogadores_em_jogo"][lista_sort[0]]["Frota"]=DG["Frota"]
+        DG["jogadores_em_jogo"][lista_sort[0]]["Frota"]={
 
-        DG["jogadores_em_jogo"][lista_sort[1]]["Frota"]=DG["Frota"]
+            "L":{
+                "quantidade":4,
+                "navios_colocados":4
+            },
+
+            "S":{
+                'quantidade':3,
+                "navios_colocados":3
+            },
+
+            "F":{
+                "quantidade":2,
+                "navios_colocados":2
+            },
+
+            "C":{
+                'quantidade':1,
+                "navios_colocados":1
+            },
+        
+            "P":{
+                'quantidade':1,
+                "navios_colocados":1
+            }
+        }
+
+        DG["jogadores_em_jogo"][lista_sort[1]]["Frota"]={
+
+            "L":{
+                "quantidade":4,
+                "navios_colocados":4
+            },
+
+            "S":{
+                'quantidade':3,
+                "navios_colocados":3
+            },
+
+            "F":{
+               "quantidade":2,
+                "navios_colocados":2
+            },
+
+            "C":{
+                'quantidade':1,
+                "navios_colocados":1
+            },
+        
+            "P":{
+               'quantidade':1,
+                "navios_colocados":1
+            }
+        }
         #--------------------------------------------------------
 
         DG["jogo_em_curso"]=True
@@ -114,7 +166,7 @@ def Iniciar_Jogo(DG,nome1,nome2):
     else:
         return("Jogadores não registados.")
 
-def print_tabuleiro(tabuleiro):
+def print_tabuleiro(tabuleiro): #Para DEBUG! Não para avaliar. Sabemos que contem prints. :P
     Letras=["","A","B","C","D","E","F","G","H","I","J"]
     for letra in range(0,len(Letras)):
         print(f"{Letras[letra]:<3}", end="")
@@ -139,23 +191,24 @@ def bloco(DG,nome,linha,coluna,tipo,orientacao): #Cria blocos á volta da posiç
                 tabuleiro[posiçao[0]+i[0]] [posiçao[1]+i[1]]="x"
 
 
-def verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientacao):
+def verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientacao,nome):
     tamanho=DG["Frota"][tipo]["tamanho"]
     permite=True
-    posiçao=[linha,coluna]
+    posiçao=[linha-1,translator(coluna)]
+    tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
 
     for i in range(0,tamanho):               #Delimita o espaço de jogo.
         if orientacao=="O":
-            if posiçao[1]-i <0:
+            if posiçao[1]-i <0 or (tabuleiro[posiçao[0]] [posiçao[1]-i]=="x" or tabuleiro[posiçao[0]] [posiçao[1]] in list(DG["Frota"].keys())):
                 permite=False
-        if orientacao=="E":
-            if posiçao[1]+i >9:
+        elif orientacao=="E":
+            if posiçao[1]+i >9 or (tabuleiro[posiçao[0]] [posiçao[1]+i]=="x" or tabuleiro[posiçao[0]] [posiçao[1]] in list(DG["Frota"].keys())):
                 permite=False
-        if orientacao=="S":
-            if posiçao[0]+i >9:
+        elif orientacao=="S":
+            if posiçao[0]+i >9 or (tabuleiro[posiçao[0]+i] [posiçao[1]]=="x" or tabuleiro[posiçao[0]] [posiçao[1]] in list(DG["Frota"].keys())):
                 permite=False
-        if orientacao=="N":
-            if posiçao[0]-i <0:
+        elif orientacao=="N":
+            if posiçao[0]-i <0 or (tabuleiro[posiçao[0]-i] [posiçao[1]]=="x" or tabuleiro[posiçao[0]] [posiçao[1]] in list(DG["Frota"].keys())):
                 permite=False
 
     return permite
@@ -165,19 +218,28 @@ def verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientacao):
 def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao):
     if DG["jogo_em_curso"]==False:
         return("Não existe um jogo em curso.")
+
     if existe_jogador_em_jogo(DG,nome):
         tamanho=DG["Frota"][tipo]["tamanho"]
         posiçao=[linha-1,translator(coluna)]
-        for i in range(0,tamanho):
-            if orientaçao=="O":
-                bloco(DG,nome,posiçao[0],posiçao[1]-i,tipo,orientaçao)
-            if orientaçao=="E":
-                bloco(DG,nome,posiçao[0],posiçao[1]+i,tipo,orientaçao)
-            if orientaçao=="S":
-                bloco(DG,nome,posiçao[0]+i,posiçao[1],tipo,orientaçao)
-            if orientaçao=="N":
-                bloco(DG,nome,posiçao[0]-i,posiçao[1],tipo,orientaçao)
-        return("Navio colocado com sucesso.")
+        if verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientaçao,nome):
+            if DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]>0:
+                DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]-=1
+                for i in range(0,tamanho):
+                    if orientaçao=="O":
+                        bloco(DG,nome,posiçao[0],posiçao[1]-i,tipo,orientaçao)
+                    if orientaçao=="E":
+                        bloco(DG,nome,posiçao[0],posiçao[1]+i,tipo,orientaçao)
+                    if orientaçao=="S":
+                        bloco(DG,nome,posiçao[0]+i,posiçao[1],tipo,orientaçao)
+                    if orientaçao=="N":
+                        bloco(DG,nome,posiçao[0]-i,posiçao[1],tipo,orientaçao)
+                return("Navio colocado com sucesso.")
+            else:
+                return('Não tem mais navios dessa tipologia disponíveis.')
 
+
+        else:
+            return ("Posição irregular.")
     else:
-        print("Jogador não participa no jogo em curso.")
+        return("Jogador não participa no jogo em curso.")
