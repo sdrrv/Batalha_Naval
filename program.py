@@ -48,10 +48,26 @@ def consola(): #Consola
             print("Instrução inválida.")        
         else:
             print(cm.Iniciar_Jogo(DG,command[1],command[2]))
+    
+    elif command[0] == "print":
+        if len(command)!=2:
+            print("Instrução invalida.")
+
+        else:
+            #cm.print_tabuleiro(cm.DG["jogadores_em_jogo"][list ( cm.DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["tabuleiro"] )
+            print(cm.DG["jogadores_em_jogo"][list ( cm.DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["Frota"])
+    
+    elif command[0] == 'CN':
+        if len(command) != 5:
+            print('Instrução inválida')   
             
+
+
+
     else:
         print("Instrução inválida.")
-
+    
+    
 
 #-----------------------------------------------------------------------
 
