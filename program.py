@@ -71,11 +71,11 @@ def consola(): #Consola
             print('Não existe jogo em curso.')
         elif not cm.existe_jogador_em_jogo(DG,command[1]):
             print('Jogador não participa no jogo em curso.')
-
-        elif DG["jogadores_em_jogo"][command[1]]["tabuleiro"][int(command[2])][cm.translator(command [3])] !=0 :
+        elif DG["jogadores_em_jogo"][command[1]]["tabuleiro"][int(command[2])-1][cm.translator(command [3])] == 0 :
             print('Não existe navio na posição.')
         else:
-            print( cm.Remover_Navios(DG,command[1], int(command[2]), command[3] ) )
+            cm.Remover_Navios(DG,command[1], int(command[2]), command[3] )
+            print("Navio removido com sucesso.")
     
     elif command[0] == 'D':
         if len(command)!=2 and len(command)!=3:
