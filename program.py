@@ -50,7 +50,7 @@ def consola(): #Consola
     
     elif command[0] == "print": #DEBUGING COMMAND
         if len(command)!=2:
-            print("Instrução invalida.")
+            print("Instrução inválida.")
 
         else:
             cm.print_tabuleiro(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["tabuleiro"] )
@@ -61,13 +61,40 @@ def consola(): #Consola
             print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4]))
         elif len(command)==6:
             print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4],command[5]))
-        else:
-            print('Instrução inválida')
+        elif not 1 <= int(command[3]) <= 10 or not "A"<=command[4]<="J":
+            print('Instrução inválida.')
+    
+    elif command[0] == 'RN':
+        if len(command)!=4 or not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J":
+            print('Instrução inválida.')
+        elif DG['jogo_em_curso'] == False:
+            print('Não existe jogo em curso.')
+        elif not cm.existe_jogador_em_jogo(DG,command[1]):
+            print('Jogador não participa no jogo em curso.')
 
+        elif DG["jogadores_em_jogo"][command[1]]["tabuleiro"][int(command[2])][cm.translator(command [3])] !=0 :
+            print('Não existe navio na posição.')
+        else:
+            print( cm.Remover_Navios(DG,command[1], int(command[2]), command[3] ) )
+    
+    elif command[0] == 'D':
+        if len(command)!=2 and len(command)!=3:
+            print('Instrução inválida.')
+        elif DG['jogo_em_curso'] == False:
+            print('Não existe jogo em curso.')
+        elif not cm.existe_jogador_em_jogo(DG,command[1]):
+            print('Jogador não participa no jogo em curso.')
+        elif len(command) == 2:
+            cm.Desistir(DG,command[1])
+        elif len(command) == 3:
+            cm.Desistir(DG,command[1],command[2])
 
 
     else:
         print("Instrução inválida.")
+
+
+
     
 
 #-----------------------------------------------------------------------

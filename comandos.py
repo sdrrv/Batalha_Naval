@@ -170,15 +170,19 @@ def print_tabuleiro(tabuleiro): #Para DEBUG! Não para avaliar. Sabemos que cont
 def translator(letra):                      #Traduz uma letra para uma posição index da lista.
     return ord(letra)-65
 
-def bloco(DG,nome,linha,coluna,tipo,orientacao): #verificxa se o jogador pode ou não colocar o navio no espaco de jogo, já delimitado pela funçao verificar_posiçao_em_tabuleiro
+def bloco(DG,nome,linha,coluna): #verificxa se o jogador pode ou não colocar o navio no espaco de jogo, já delimitado pela funçao verificar_posiçao_em_tabuleiro
     a=[[0,1],[0,-1],[1,0],[-1,0],[-1,-1],[1,-1],[1,1],[-1,1]]
-    result=True
+    permite=True
+    result=[]
     tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
     posiçao=[linha,coluna]
     for i in a:
         if not posiçao[0]+i[0]<0 and not posiçao[0]+i[0]>9 and not posiçao[1]+i[1]<0 and not posiçao[1]+i[1]>9:
             if tabuleiro[posiçao[0]+i[0]] [posiçao[1]+i[1]]!=0:
-                result=False
+                permite=False
+                result.append([posiçao[0]+i[0],posiçao[1]+i[1]])
+
+    result.insert(0,permite)
     return result
 
 
@@ -190,16 +194,16 @@ def verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientacao,nome):
 
     for i in range(0,tamanho):               #Delimita o espaço de jogo.
         if orientacao=="O" or orientacao=="não_tem":
-            if posiçao[1]-i <0:
+            if posiçao[1]-i <0 or not bloco(DG,nome,posiçao[0],posiçao[1]-i)[0]:
                 permite=False
         elif orientacao=="E":
-            if posiçao[1]+i >9:
+            if posiçao[1]+i >9 or not bloco(DG,nome,posiçao[0],posiçao[1]+i)[0]:
                 permite=False
         elif orientacao=="S":
-            if posiçao[0]+i >9:
+            if posiçao[0]+i >9 or not bloco(DG,nome,posiçao[0]+i,posiçao[1])[0]:
                 permite=False
         elif orientacao=="N":
-            if posiçao[0]-i <0:
+            if posiçao[0]-i <0 or not bloco(DG,nome,posiçao[0]-i,posiçao[1])[0]:
                 permite=False
 
     return permite
@@ -217,20 +221,17 @@ def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao="não_tem"):
         posiçao=[linha-1,translator(coluna)]
         if verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientaçao,nome):
             if DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]>0:
-                if bloco(DG,nome,posiçao[0],posiçao[1],tipo,orientaçao):
-                    DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]-=1
-                    for i in range(0,tamanho):
-                        if orientaçao=="O" or orientaçao=="não_tem":
-                            tabuleiro[posiçao[0]] [posiçao[1]-i]=tipo
-                        elif orientaçao=="E":
-                            tabuleiro[posiçao[0]] [posiçao[1]+i]=tipo
-                        elif orientaçao=="S":
-                            tabuleiro[posiçao[0]+i] [posiçao[1]]=tipo
-                        elif orientaçao=="N":
-                            tabuleiro[posiçao[0]-i] [posiçao[1]]=tipo
-                    return("Navio colocado com sucesso.")
-                else:
-                    return("Não é possível colocar navios.")
+                DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]-=1
+                for i in range(0,tamanho):
+                    if orientaçao=="O" or orientaçao=="não_tem":
+                        tabuleiro[posiçao[0]] [posiçao[1]-i]=tipo
+                    elif orientaçao=="E":
+                        tabuleiro[posiçao[0]] [posiçao[1]+i]=tipo
+                    elif orientaçao=="S":
+                        tabuleiro[posiçao[0]+i] [posiçao[1]]=tipo
+                    elif orientaçao=="N":
+                        tabuleiro[posiçao[0]-i] [posiçao[1]]=tipo
+                return("Navio colocado com sucesso.")
             else:
                 return('Não tem mais navios dessa tipologia disponíveis.')
 
@@ -239,3 +240,21 @@ def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao="não_tem"):
             return ("Posição irregular.")
     else:
         return("Jogador não participa no jogo em curso.")
+
+
+def Remover_Navios(DG,nome,linha,coluna):
+    posiçao=[linha-1,translator(coluna)]
+    tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
+
+    tabuleiro [posiçao[0]] [posiçao[1]] = 0
+
+    result=(bloco(DG,nome,posiçao[0],posiçao[1]))
+    if not result[0]:
+        del(result[0]) #deleta o estatudo True or False
+        for i in result:
+            Remover_Navios(DG,nome,i[0]+1,chr(i[1]+65))
+
+
+def Desistir(DG,nome1,nome2="não_tem"):
+    
+    pass
