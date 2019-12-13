@@ -170,15 +170,16 @@ def print_tabuleiro(tabuleiro): #Para DEBUG! Não para avaliar. Sabemos que cont
 def translator(letra):                      #Traduz uma letra para uma posição index da lista.
     return ord(letra)-65
 
-def bloco(DG,nome,linha,coluna,tipo,orientacao): #Cria blocos á volta da posição pretendida, impedindo assim a colocação de navios nas redondesas desse navio
+def bloco(DG,nome,linha,coluna,tipo,orientacao): #verificxa se o jogador pode ou não colocar o navio no espaco de jogo, já delimitado pela funçao verificar_posiçao_em_tabuleiro
     a=[[0,1],[0,-1],[1,0],[-1,0],[-1,-1],[1,-1],[1,1],[-1,1]]
+    result=True
     tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
     posiçao=[linha,coluna]
-    tabuleiro[posiçao[0]] [posiçao[1]]=tipo
     for i in a:
-        if not posiçao[0]+i[0]<0 and not posiçao[0]+i[0]>9  and not posiçao[1]+i[1]<0 and  not posiçao[1]+i[1]>9:
-            if tabuleiro[posiçao[0]+i[0]] [posiçao[1]+i[1]]==0:
-                tabuleiro[posiçao[0]+i[0]] [posiçao[1]+i[1]]="x"
+        if not posiçao[0]+i[0]<0 and not posiçao[0]+i[0]>9 and not posiçao[1]+i[1]<0 and not posiçao[1]+i[1]>9:
+            if tabuleiro[posiçao[0]+i[0]] [posiçao[1]+i[1]]!=0:
+                result=False
+    return result
 
 
 def verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientacao,nome):
@@ -189,16 +190,16 @@ def verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientacao,nome):
 
     for i in range(0,tamanho):               #Delimita o espaço de jogo.
         if orientacao=="O" or orientacao=="não_tem":
-            if posiçao[1]-i <0 or (tabuleiro[posiçao[0]] [posiçao[1]-i]=="x" or tabuleiro[posiçao[0]] [posiçao[1]] in list(DG["Frota"].keys())):
+            if posiçao[1]-i <0:
                 permite=False
         elif orientacao=="E":
-            if posiçao[1]+i >9 or (tabuleiro[posiçao[0]] [posiçao[1]+i]=="x" or tabuleiro[posiçao[0]] [posiçao[1]] in list(DG["Frota"].keys())):
+            if posiçao[1]+i >9:
                 permite=False
         elif orientacao=="S":
-            if posiçao[0]+i >9 or (tabuleiro[posiçao[0]+i] [posiçao[1]]=="x" or tabuleiro[posiçao[0]] [posiçao[1]] in list(DG["Frota"].keys())):
+            if posiçao[0]+i >9:
                 permite=False
         elif orientacao=="N":
-            if posiçao[0]-i <0 or (tabuleiro[posiçao[0]-i] [posiçao[1]]=="x" or tabuleiro[posiçao[0]] [posiçao[1]] in list(DG["Frota"].keys())):
+            if posiçao[0]-i <0:
                 permite=False
 
     return permite
@@ -211,21 +212,25 @@ def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao="não_tem"):
     elif tipo!="L" and orientaçao=="não_tem":
         return('Instrução inválida')
     elif existe_jogador_em_jogo(DG,nome):
+        tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
         tamanho=DG["Frota"][tipo]["tamanho"]
         posiçao=[linha-1,translator(coluna)]
         if verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientaçao,nome):
             if DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]>0:
-                DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]-=1
-                for i in range(0,tamanho):
-                    if orientaçao=="O" or orientaçao=="não_tem":
-                        bloco(DG,nome,posiçao[0],posiçao[1]-i,tipo,orientaçao)
-                    elif orientaçao=="E":
-                        bloco(DG,nome,posiçao[0],posiçao[1]+i,tipo,orientaçao)
-                    elif orientaçao=="S":
-                        bloco(DG,nome,posiçao[0]+i,posiçao[1],tipo,orientaçao)
-                    elif orientaçao=="N":
-                        bloco(DG,nome,posiçao[0]-i,posiçao[1],tipo,orientaçao)
-                return("Navio colocado com sucesso.")
+                if bloco(DG,nome,posiçao[0],posiçao[1],tipo,orientaçao):
+                    DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]-=1
+                    for i in range(0,tamanho):
+                        if orientaçao=="O" or orientaçao=="não_tem":
+                            tabuleiro[posiçao[0]] [posiçao[1]-i]=tipo
+                        elif orientaçao=="E":
+                            tabuleiro[posiçao[0]] [posiçao[1]+i]=tipo
+                        elif orientaçao=="S":
+                            tabuleiro[posiçao[0]+i] [posiçao[1]]=tipo
+                        elif orientaçao=="N":
+                            tabuleiro[posiçao[0]-i] [posiçao[1]]=tipo
+                    return("Navio colocado com sucesso.")
+                else:
+                    return("Não é possível colocar navios.")
             else:
                 return('Não tem mais navios dessa tipologia disponíveis.')
 
