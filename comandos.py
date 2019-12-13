@@ -256,5 +256,5 @@ def Remover_Navios(DG,nome,linha,coluna):
 
 
 def Desistir(DG,nome1,nome2="não_tem"):
-    
+
     pass
