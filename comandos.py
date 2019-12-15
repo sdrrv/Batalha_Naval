@@ -1,9 +1,9 @@
-
+#--------------------------------------------------------------------------------
 Dicionario_Geral=DG={
     "jogadores":{
     #    "jogador1":{
-    #        "vitórias":0,
-    #        "jogos_jogados":0,
+    #        "vitorias":0,
+    #        "Jogos":0,
     #    }
     },
 
@@ -190,7 +190,6 @@ def verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientacao,nome):
     tamanho=DG["Frota"][tipo]["tamanho"]
     permite=True
     posiçao=[linha-1,translator(coluna)]
-    tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
 
     for i in range(0,tamanho):               #Delimita o espaço de jogo.
         if orientacao=="O" or orientacao=="não_tem":
@@ -234,8 +233,6 @@ def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao="não_tem"):
                 return("Navio colocado com sucesso.")
             else:
                 return('Não tem mais navios dessa tipologia disponíveis.')
-
-
         else:
             return ("Posição irregular.")
     else:
@@ -256,5 +253,15 @@ def Remover_Navios(DG,nome,linha,coluna):
 
 
 def Desistir(DG,nome1,nome2="não_tem"):
-
-    pass
+    if nome2 != "não_tem":
+        for jogador in DG["jogadores"].keys():
+            DG["jogadores"][jogador]["Jogos"]+=1
+    else:
+        DG["jogadores"][nome1]["Jogos"]+=1
+        for jogador in DG["jogadores"].keys():
+            if jogador!= nome1:
+                DG["jogadores"][jogador]["Jogos"]+=1
+                DG["jogadores"][jogador]["vitorias"]+=1
+    #-------------------Reset-do-tabuleiro-------------------------------            
+    DG["jogadores_em_jogo"].clear()
+    DG["jogo_em_curso"]=False
