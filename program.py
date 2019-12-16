@@ -98,7 +98,7 @@ def consola(): #Consola
         elif not cm.existe_jogador_em_jogo(DG,command[1]):
             print('Jogador não participa no jogo em curso.')
         else:
-            print(cm.Tiro(DG,command[1],command[2],command[3]))
+            print(cm.Tiro(DG,command[1],int(command[2]),command[3]))
         
     elif command[0] == 'IC':
         if len(command) != 1:

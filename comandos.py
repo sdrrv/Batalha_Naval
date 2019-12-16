@@ -91,70 +91,65 @@ def Iniciar_Jogo(DG,nome1,nome2):
 
     elif Existe_Jogador(DG, nome1) and Existe_Jogador(DG, nome2):
         lista_sort=sorted([nome1,nome2])
-
-        #----------------------criar tabuleiros------------------
-        DG["jogadores_em_jogo"][lista_sort[0]]={"tabuleiro":[[0 for _ in range(0,10)] for _ in range(0,10)]}
-
-        DG["jogadores_em_jogo"][lista_sort[1]]={"tabuleiro":[[0 for _ in range(0,10)] for _ in range(0,10)]}
-        #-------------------------Criar Frota--------------------
-        DG["jogadores_em_jogo"][lista_sort[0]]["Frota"]={
-
-            "L":{
-                "quantidade":4,
-                "navios_colocados":4
-            },
-
-            "S":{
-                'quantidade':3,
-                "navios_colocados":3
-            },
-
-            "F":{
-                "quantidade":2,
-                "navios_colocados":2
-            },
-
-            "C":{
-                'quantidade':1,
-                "navios_colocados":1
-            },
-        
-            "P":{
-                'quantidade':1,
-                "navios_colocados":1
-            }
-        }
-
-        DG["jogadores_em_jogo"][lista_sort[1]]["Frota"]={
-
-            "L":{
-                "quantidade":4,
-                "navios_colocados":4
-            },
-
-            "S":{
-                'quantidade':3,
-                "navios_colocados":3
-            },
-
-            "F":{
-               "quantidade":2,
-                "navios_colocados":2
-            },
-
-            "C":{
-                'quantidade':1,
-                "navios_colocados":1
-            },
-        
-            "P":{
-               'quantidade':1,
-                "navios_colocados":1
-            }
-        }
-        #--------------------------------------------------------
-
         DG["jogo_em_curso"]=True
+        for jogador in lista_sort:
+            #----------------------Criar Tabuleiros------------------
+            DG["jogadores_em_jogo"][jogador]={"tabuleiro":[[0 for _ in range(0,10)] for _ in range(0,10)]}
+            #----------------------Criar Classificaçao---------------
+            DG["jogadores_em_jogo"][jogador]["Tiros"]=0
+            DG["jogadores_em_jogo"][jogador]["Tiros_em_navios"]=0
+            DG["jogadores_em_jogo"][jogador]["Navios_afundados"]=0
+            #-------------------------Criar Frota--------------------
+            DG["jogadores_em_jogo"][jogador]["Frota"]={
+                "L":{
+                    "quantidade":4,
+                    "navios_em_jogo":4,
+                    "contador":0,
+                    "Frota_em_jogo":{
+                        #"L1":1,
+                        #"L2":1,
+                        #"L3":1,
+                        #"L4":1
+                    }
+                },
+
+                "S":{
+                    'quantidade':3,
+                    "navios_em_jogo":3,
+                    "contador":0,
+                    "Frota_em_jogo":{
+                        
+                    }
+                },
+
+                "F":{
+                    "quantidade":2,
+                    "navios_em_jogo":2,
+                    "contador":0,
+                    "Frota_em_jogo":{
+                        
+                    }
+                },
+
+                "C":{
+                    'quantidade':1,
+                    "navios_em_jogo":1,
+                    "contador":0,
+                    "Frota_em_jogo":{
+
+                    }
+
+                },
+        
+                "P":{
+                    'quantidade':1,
+                    "navios_em_jogo":1,
+                    "contador":0,
+                    "Frota_em_jogo": {
+                        
+                    }
+                }
+            }    
         return(f'Jogo iniciado entre {lista_sort[0]} e {lista_sort[1]}.')
     else:
         return("Jogadores não registados.")
@@ -173,7 +168,7 @@ def print_tabuleiro(tabuleiro): #Para DEBUG! Não para avaliar. Sabemos que cont
 def translator(letra):                      #Traduz uma letra para uma posição index da lista.
     return ord(letra)-65
 
-def bloco(DG,nome,linha,coluna): #verificxa se o jogador pode ou não colocar o navio no espaco de jogo, já delimitado pela funçao verificar_posiçao_em_tabuleiro
+def bloco(DG,nome,linha,coluna): #verifica se o jogador pode ou não colocar o navio no espaco de jogo, já delimitado pela funçao verificar_posiçao_em_tabuleiro
     a=[[0,1],[0,-1],[1,0],[-1,0],[-1,-1],[1,-1],[1,1],[-1,1]]
     permite=True
     result=[]
@@ -224,15 +219,20 @@ def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao="não_tem"):
         if verificar_posiçao_em_tabuleiro(DG,tipo,linha,coluna,orientaçao,nome):
             if DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]>0:
                 DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]-=1
+
+                contador=DG["jogadores_em_jogo"][nome]["Frota"][tipo]["contador"]
+                DG["jogadores_em_jogo"][nome]["Frota"][tipo]["Frota_em_jogo"][f"{tipo}{contador}"]=tamanho #Adicina o numero de navios ao tipo
+               
                 for i in range(0,tamanho):
                     if orientaçao=="O" or orientaçao=="não_tem":
-                        tabuleiro[posiçao[0]] [posiçao[1]-i]=tipo
+                        tabuleiro[posiçao[0]] [posiçao[1]-i]=(f"{tipo}{contador}")
                     elif orientaçao=="E":
-                        tabuleiro[posiçao[0]] [posiçao[1]+i]=tipo
+                        tabuleiro[posiçao[0]] [posiçao[1]+i]=(f"{tipo}{contador}")
                     elif orientaçao=="S":
-                        tabuleiro[posiçao[0]+i] [posiçao[1]]=tipo
+                        tabuleiro[posiçao[0]+i] [posiçao[1]]=(f"{tipo}{contador}")
                     elif orientaçao=="N":
-                        tabuleiro[posiçao[0]-i] [posiçao[1]]=tipo
+                        tabuleiro[posiçao[0]-i] [posiçao[1]]=(f"{tipo}{contador}")
+                DG["jogadores_em_jogo"][nome]["Frota"][tipo]["contador"]+=1
                 return("Navio colocado com sucesso.")
             else:
                 return('Não tem mais navios dessa tipologia disponíveis.')
@@ -250,7 +250,11 @@ def Remover_Navios(DG,nome,linha,coluna):
 
     if result[0]:
         tipo=tabuleiro [posiçao[0]] [posiçao[1]]
-        DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]+=1
+        tipo_base=(list(tipo))[0]
+
+        DG["jogadores_em_jogo"][nome]["Frota"][tipo_base]["quantidade"]+=1
+        del(DG["jogadores_em_jogo"][nome]["Frota"][tipo_base]["Frota_em_jogo"][tipo])
+
 
     tabuleiro [posiçao[0]] [posiçao[1]] = 0
 
@@ -288,6 +292,29 @@ def Iniciar_combate(DG):
 
 
 def Tiro(DG,nome,linha,coluna):
+    posiçao=[linha-1,translator(coluna)]
+
+    for jogador in DG["jogadores_em_jogo"]:
+        if jogador != nome:
+            tabuleiro=DG["jogadores_em_jogo"][jogador]["tabuleiro"]
+            nome_adversario=jogador
+    #---------------------------------Se-Falhar------------------------------------
+    if tabuleiro[posiçao[0]][posiçao[1]] == 0:
+        DG["jogadores_em_jogo"][jogador]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
+        return "Tiro na água."
+    elif tabuleiro[posiçao[0]][posiçao[1]] == "x":
+        return "Já disparou nessa posição."
+    #---------------------------------Se-Acertar------------------------------------
+    else:
+        tipo=tabuleiro [posiçao[0]] [posiçao[1]]
+        tipo_base=(list(tipo))[0]
+        DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]-=1
+
+        if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]==0:
+            DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["navios_em_jogo"]-=1
+            del(DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo])
+        DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
+        return("Tiro em navio.")
 
     pass
 
