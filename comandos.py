@@ -1,3 +1,5 @@
+#----------------------------------Imports---------------------------------------
+import pickle
 #--------------------------------------------------------------------------------
 Dicionario_Geral=DG={
     "jogadores":{
@@ -8,6 +10,7 @@ Dicionario_Geral=DG={
     },
 
     "jogo_em_curso":False,
+    "combate_em_curso":False,
 
     "jogadores_em_jogo":{
         #"jogador1":{
@@ -243,9 +246,14 @@ def Remover_Navios(DG,nome,linha,coluna):
     posiçao=[linha-1,translator(coluna)]
     tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
 
+    result=(bloco(DG,nome,posiçao[0],posiçao[1]))
+
+    if result[0]:
+        tipo=tabuleiro [posiçao[0]] [posiçao[1]]
+        DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]+=1
+
     tabuleiro [posiçao[0]] [posiçao[1]] = 0
 
-    result=(bloco(DG,nome,posiçao[0],posiçao[1]))
     if not result[0]:
         del(result[0]) #deleta o estatudo True or False
         for i in result:
@@ -265,3 +273,30 @@ def Desistir(DG,nome1,nome2="não_tem"):
     #-------------------Reset-do-tabuleiro-------------------------------            
     DG["jogadores_em_jogo"].clear()
     DG["jogo_em_curso"]=False
+    DG["combate_em_curso"]=False
+
+def Iniciar_combate(DG):
+    if DG["jogo_em_curso"]==False:
+        return("Não existe jogo em curso.")
+    else:
+        for jogador in DG["jogadores_em_jogo"]:
+            for tipo in DG["jogadores_em_jogo"][jogador]["Frota"]:
+                    if DG["jogadores_em_jogo"][jogador]["Frota"][tipo]["quantidade"]!=0:
+                        return("Navios não colocados.")
+    DG["combate_em_curso"]=True
+    return("Combate iniciado.")
+
+
+def Tiro(DG,nome,linha,coluna):
+
+    pass
+
+def Gravar(DG):
+    with open ('save.txt', 'wb') as f: 
+        pickle.dump(DG,f)
+    return ("Jogo gravado.")
+
+def Ler(DG):
+    with open ('save.txt', 'rb') as f:
+        DG = pickle.load(f)
+    return("Jogo carregado.")

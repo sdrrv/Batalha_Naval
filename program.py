@@ -1,6 +1,7 @@
 import comandos as cm
 
 def consola(): #Consola
+    orientacoes=["N","S","E","O"]
     DG=cm.DG
     #-----------------------------------------------
 
@@ -54,14 +55,14 @@ def consola(): #Consola
 
         else:
             cm.print_tabuleiro(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["tabuleiro"] )
-            #print(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["Frota"])
+            print(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["Frota"])
     
     elif command[0] == 'CN':
         if command[2]=="L" and len(command)==5:
             print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4]))
         elif len(command)==6:
             print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4],command[5]))
-        elif not 1 <= int(command[3]) <= 10 or not "A"<=command[4]<="J":
+        elif not 1 <= int(command[3]) <= 10 or not "A"<=command[4]<="J" or command[5] not in orientacoes:
             print('Instrução inválida.')
     
     elif command[0] == 'RN':
@@ -89,11 +90,38 @@ def consola(): #Consola
         elif len(command) == 3:
             cm.Desistir(DG,command[1],command[2])
 
+    elif command[0] == 'T':
+        if len(command)!=4 or not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J" :
+            print('Instrução inválida.')
+        elif DG['jogo_em_curso'] == False:
+            print('Não existe jogo em curso.')
+        elif not cm.existe_jogador_em_jogo(DG,command[1]):
+            print('Jogador não participa no jogo em curso.')
+        else:
+            print(cm.Tiro(DG,command[1],command[2],command[3]))
+        
+    elif command[0] == 'IC':
+        if len(command) != 1:
+            print('Instrução inválida')
+        else: 
+            print(cm.Iniciar_combate(DG))
+
+    elif command[0] == 'G':
+        if len(command) != 1:
+            print('Instrução inválida') 
+        else:
+            print(cm.Gravar(DG))
+
+    elif command[0] == 'L':
+        if len(command) != 1:
+            print('Instrução inválida') 
+        else:
+            print(cm.Ler(DG))
 
     else:
         print("Instrução inválida.")
 
-
+    
 
     
 
