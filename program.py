@@ -89,6 +89,7 @@ def consola(): #Consola
             cm.Desistir(DG,command[1])
         elif len(command) == 3:
             cm.Desistir(DG,command[1],command[2])
+            print("Desistência com sucesso. Jogo terminado.")
 
     elif command[0] == 'T':
         if len(command)!=4 or not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J" :
@@ -97,14 +98,32 @@ def consola(): #Consola
             print('Não existe jogo em curso.')
         elif not cm.existe_jogador_em_jogo(DG,command[1]):
             print('Jogador não participa no jogo em curso.')
-        else:
+        elif DG["Ronda"]=="":
+            DG["Ronda"]=command[1]
             print(cm.Tiro(DG,command[1],int(command[2]),command[3]))
+        else:
+            if DG["Ronda"]!= command[1]:
+                DG["Ronda"]=command[1]
+                print(cm.Tiro(DG,command[1],int(command[2]),command[3]))
+            else:
+                print("Não é a tua vez.")
+
         
     elif command[0] == 'IC':
         if len(command) != 1:
             print('Instrução inválida')
         else: 
             print(cm.Iniciar_combate(DG))
+
+    elif command[0] == 'V':
+        if len(command) != 1:
+            print('Instrução inválida') 
+        else:
+            result=cm.Visualizar_Resultado(DG)
+            print(str(result[0]))
+            print(str(result[1]))
+
+
 
     elif command[0] == 'G':
         if len(command) != 1:
