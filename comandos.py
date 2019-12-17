@@ -11,7 +11,7 @@ Dicionario_Geral=DG={
 
     "jogo_em_curso":False,
     "combate_em_curso":False,
-
+    "Ronda":"",
     "jogadores_em_jogo":{
         #"jogador1":{
             #"tabuleiro":[],
@@ -278,6 +278,7 @@ def Desistir(DG,nome1,nome2="não_tem"):
     DG["jogadores_em_jogo"].clear()
     DG["jogo_em_curso"]=False
     DG["combate_em_curso"]=False
+    DG["Ronda"]=""
 
 def Iniciar_combate(DG):
     if DG["jogo_em_curso"]==False:
@@ -293,6 +294,7 @@ def Iniciar_combate(DG):
 
 def Tiro(DG,nome,linha,coluna):
     posiçao=[linha-1,translator(coluna)]
+    DG["jogadores_em_jogo"][nome]["Tiros"]+=1
 
     for jogador in DG["jogadores_em_jogo"]:
         if jogador != nome:
@@ -309,14 +311,37 @@ def Tiro(DG,nome,linha,coluna):
         tipo=tabuleiro [posiçao[0]] [posiçao[1]]
         tipo_base=(list(tipo))[0]
         DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]-=1
+        DG["jogadores_em_jogo"][nome]["Tiros_em_navios"]+=1
 
         if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]==0:
             DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["navios_em_jogo"]-=1
+            DG["jogadores_em_jogo"][nome]["Navios_afundados"]+=1
             del(DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo])
+
+            for tipo_base in DG["jogadores_em_jogo"][nome_adversario]["Frota"]:
+                if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]!=0:
+                    DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
+                    return(f"Navio {tipo} afundado.")
+                else:
+                    DG["jogadores_em_jogo"].clear()
+                    DG["jogo_em_curso"]=False
+                    DG["combate_em_curso"]=False
+                    DG["Ronda"]=""
+                    return(f"Navio {tipo} afundado. Jogo terminado")
+
+
+        
         DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
+        
         return("Tiro em navio.")
 
-    pass
+def Visualizar_Resultado(DG):
+    result=[]
+    jogo=DG["jogadores_em_jogo"]
+    for jogador_em_jogo in DG["jogadores_em_jogo"]:
+        i=str(jogador_em_jogo)+" "+str(jogo[jogador_em_jogo]["Tiros"])+" "+str(jogo[jogador_em_jogo]["Tiros_em_navios"])+" "+str(jogo[jogador_em_jogo]["Navios_afundados"])
+        result.append(i)
+    return result
 
 def Gravar(DG):
     with open ('save.txt', 'wb') as f: 
