@@ -1,7 +1,8 @@
 #----------------------------------Imports---------------------------------------
 import pickle
 #--------------------------------------------------------------------------------
-Dicionario_Geral=DG={
+def Dicionario_Geral():
+    return {
     "jogadores":{
     #    "jogador1":{
     #        "vitorias":0,
@@ -155,14 +156,14 @@ def Iniciar_Jogo(DG,nome1,nome2):
         return("Jogadores não registados.")
 
 def print_tabuleiro(tabuleiro): #Para DEBUG! Não para avaliar. Sabemos que contem prints. :P
-    Letras=["","A","B","C","D","E","F","G","H","I","J"]
+    Letras=["  A","B","C","D","E","F","G","H","I","J"]
     for letra in range(0,len(Letras)):
-        print(f"{Letras[letra]:<3}", end="")
+        print(f"{Letras[letra]:<3}\t", end="")
     print()
     for linha in range(0, len(tabuleiro)):
         print(f"{(linha+1):<2}", end="")
         for coluna in range(0,len(tabuleiro)):
-            print(f"[{tabuleiro[linha][coluna]}]", end="")
+            print(f"{tabuleiro[linha][coluna]}\t", end="")
         print()
 
 def translator(letra):                      #Traduz uma letra para uma posição index da lista.
@@ -348,7 +349,8 @@ def Gravar(DG):
         pickle.dump(DG,f)
     return ("Jogo gravado.")
 
-def Ler(DG):
+def Ler():
+    DG=None
     with open ('save.txt', 'rb') as f:
         DG = pickle.load(f)
-    return("Jogo carregado.")
+    return DG
