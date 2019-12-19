@@ -72,6 +72,10 @@ def consola(): #Consola
                 print('Não existe jogo em curso.')
             elif not cm.existe_jogador_em_jogo(DG,command[1]):
                 print('Jogador não participa no jogo em curso.')
+                
+            elif not DG["combate_em_curso"]:
+                print("Jogo em curso sem combate iniciado.")
+
             elif DG["jogadores_em_jogo"][command[1]]["tabuleiro"][int(command[2])-1][cm.translator(command [3])] == 0 :
                 print('Não existe navio na posição.')
             else:
