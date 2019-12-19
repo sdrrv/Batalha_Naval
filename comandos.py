@@ -98,7 +98,7 @@ def Iniciar_Jogo(DG,nome1,nome2):
             DG["jogadores_em_jogo"][jogador]={"tabuleiro":[[0 for _ in range(0,10)] for _ in range(0,10)]}
             #----------------------Criar Classificaçao---------------
             DG["jogadores_em_jogo"][jogador]["Tiros"]=0
-            DG["jogadores_em_jogo"][jogador]["Tiros_em_navios"]=0
+            DG["jogadores_em_jogo"][jogador]["Tiros_em_navios"]=[]
             DG["jogadores_em_jogo"][jogador]["Navios_afundados"]=0
             #-------------------------Criar Frota--------------------
             DG["jogadores_em_jogo"][jogador]["Frota"]={
@@ -312,15 +312,15 @@ def Tiro(DG,nome,linha,coluna):
         tipo=tabuleiro [posiçao[0]] [posiçao[1]]
         tipo_base=(list(tipo))[0]
         DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]-=1
-        DG["jogadores_em_jogo"][nome]["Tiros_em_navios"]+=1
-
+        DG["jogadores_em_jogo"][nome]["Tiros_em_navios"].append(posiçao)
+        print(DG["jogadores_em_jogo"][nome]["Tiros_em_navios"])
         if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]==0:
             DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["navios_em_jogo"]-=1
             DG["jogadores_em_jogo"][nome]["Navios_afundados"]+=1
             del(DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo])
             contador=0
-            for tipo_base in DG["jogadores_em_jogo"][nome_adversario]["Frota"]:
-                if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["navios_em_jogo"]==0:
+            for tipo_bases in DG["jogadores_em_jogo"][nome_adversario]["Frota"]:
+                if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_bases]["navios_em_jogo"]==0:
                     contador+=1
             if contador!=5:
                 DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
@@ -338,7 +338,7 @@ def Visualizar_Resultado(DG):
     result=[]
     jogo=DG["jogadores_em_jogo"]
     for jogador_em_jogo in DG["jogadores_em_jogo"]:
-        i=str(jogador_em_jogo)+" "+str(jogo[jogador_em_jogo]["Tiros"])+" "+str(jogo[jogador_em_jogo]["Tiros_em_navios"])+" "+str(jogo[jogador_em_jogo]["Navios_afundados"])
+        i=str(jogador_em_jogo)+" "+str(jogo[jogador_em_jogo]["Tiros"])+" "+str(len(jogo[jogador_em_jogo]["Tiros_em_navios"]))+" "+str(jogo[jogador_em_jogo]["Navios_afundados"])
         result.append(i)
     return result
 
