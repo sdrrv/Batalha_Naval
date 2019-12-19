@@ -156,12 +156,12 @@ def Iniciar_Jogo(DG,nome1,nome2):
         return("Jogadores não registados.")
 
 def print_tabuleiro(tabuleiro): #Para DEBUG! Não para avaliar. Sabemos que contem prints. :P
-    Letras=["  A","B","C","D","E","F","G","H","I","J"]
+    Letras=["   A","B","C","D","E","F","G","H","I","J"]
     for letra in range(0,len(Letras)):
         print(f"{Letras[letra]:<3}\t", end="")
     print()
     for linha in range(0, len(tabuleiro)):
-        print(f"{(linha+1):<2}", end="")
+        print(f"{(linha+1):<2}", end=" ")
         for coluna in range(0,len(tabuleiro)):
             print(f"{tabuleiro[linha][coluna]}\t", end="")
         print()
@@ -267,11 +267,11 @@ def Remover_Navios(DG,nome,linha,coluna):
 
 def Desistir(DG,nome1,nome2="não_tem"):
     if nome2 != "não_tem":
-        for jogador in DG["jogadores"].keys():
+        for jogador in DG["jogadores_em_jogo"].keys():
             DG["jogadores"][jogador]["Jogos"]+=1
     else:
         DG["jogadores"][nome1]["Jogos"]+=1
-        for jogador in DG["jogadores"].keys():
+        for jogador in DG["jogadores_em_jogo"].keys():
             if jogador!= nome1:
                 DG["jogadores"][jogador]["Jogos"]+=1
                 DG["jogadores"][jogador]["vitorias"]+=1
@@ -299,11 +299,11 @@ def Tiro(DG,nome,linha,coluna):
 
     for jogador in DG["jogadores_em_jogo"]:
         if jogador != nome:
-            tabuleiro=DG["jogadores_em_jogo"][jogador]["tabuleiro"]
             nome_adversario=jogador
+    tabuleiro=DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"]
     #---------------------------------Se-Falhar------------------------------------
     if tabuleiro[posiçao[0]][posiçao[1]] == 0:
-        DG["jogadores_em_jogo"][jogador]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
+        DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
         return "Tiro na água."
     elif tabuleiro[posiçao[0]][posiçao[1]] == "x":
         return "Já disparou nessa posição."
@@ -318,18 +318,16 @@ def Tiro(DG,nome,linha,coluna):
             DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["navios_em_jogo"]-=1
             DG["jogadores_em_jogo"][nome]["Navios_afundados"]+=1
             del(DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo])
-
+            contador=0
             for tipo_base in DG["jogadores_em_jogo"][nome_adversario]["Frota"]:
-                if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]!=0:
-                    DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
-                    return(f"Navio {tipo} afundado.")
-                else:
-                    DG["jogadores_em_jogo"].clear()
-                    DG["jogo_em_curso"]=False
-                    DG["combate_em_curso"]=False
-                    DG["Ronda"]=""
-                    return(f"Navio {tipo} afundado. Jogo terminado")
-
+                if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["navios_em_jogo"]==0:
+                    contador+=1
+            if contador!=5:
+                DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
+                return(f"Navio {tipo_base} afundado.")
+            else:
+                Desistir(DG,nome_adversario)
+                return(f"Navio {tipo_base} afundado. Jogo terminado")
 
         
         DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
