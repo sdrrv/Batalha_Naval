@@ -102,8 +102,8 @@ def consola(): #Consola
                 print('Instrução inválida.')
             elif not DG['jogo_em_curso']:
                 print('Não existe jogo em curso.')
-            elif not DG["combate_em_curso"]:
-                print("Jogo em curso sem combate iniciado.")
+            #elif not DG["combate_em_curso"]:
+            #    print("Jogo em curso sem combate iniciado.")
             elif not cm.existe_jogador_em_jogo(DG,command[1]):
                 print('Jogador não participa no jogo em curso.')
             elif DG["Ronda"]=="":
