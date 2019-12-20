@@ -72,13 +72,10 @@ def consola(): #Consola
                 print('Não existe jogo em curso.')
             elif not cm.existe_jogador_em_jogo(DG,command[1]):
                 print('Jogador não participa no jogo em curso.')
-                
-            elif not DG["combate_em_curso"]:
-                print("Jogo em curso sem combate iniciado.")
-
             elif DG["jogadores_em_jogo"][command[1]]["tabuleiro"][int(command[2])-1][cm.translator(command [3])] == 0 :
                 print('Não existe navio na posição.')
             else:
+                cm.Removido(DG,command[1], int(command[2]), command[3] )
                 cm.Remover_Navios(DG,command[1], int(command[2]), command[3] )
                 print("Navio removido com sucesso.")
         
@@ -102,8 +99,8 @@ def consola(): #Consola
                 print('Instrução inválida.')
             elif not DG['jogo_em_curso']:
                 print('Não existe jogo em curso.')
-            #elif not DG["combate_em_curso"]:
-            #    print("Jogo em curso sem combate iniciado.")
+            elif not DG["combate_em_curso"]:
+                print("Jogo em curso sem combate iniciado.")
             elif not cm.existe_jogador_em_jogo(DG,command[1]):
                 print('Jogador não participa no jogo em curso.')
             elif DG["Ronda"]=="":
@@ -125,7 +122,11 @@ def consola(): #Consola
 
         elif command[0] == 'V':
             if len(command) != 1:
-                print('Instrução inválida') 
+                print('Instrução inválida')
+            elif not DG['jogo_em_curso']:
+                print('Não existe jogo em curso.')
+            elif not DG["combate_em_curso"]:
+                print("Jogo em curso sem combate iniciado.")
             else:
                 result=cm.Visualizar_Resultado(DG)
                 print(str(result[0]))
@@ -144,7 +145,7 @@ def consola(): #Consola
                 print('Instrução inválida') 
             else:
                 DG=cm.Ler()
-                print("Carregado com s.")
+                print("Jogo carregado.")
 
         else:
             print("Instrução inválida.")

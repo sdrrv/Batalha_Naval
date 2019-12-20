@@ -246,23 +246,21 @@ def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao="não_tem"):
 def Remover_Navios(DG,nome,linha,coluna):
     posiçao=[linha-1,translator(coluna)]
     tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
-
     result=(bloco(DG,nome,posiçao[0],posiçao[1]))
-
-    if result[0]:
-        tipo=tabuleiro [posiçao[0]] [posiçao[1]]
-        tipo_base=(list(tipo))[0]
-
-        DG["jogadores_em_jogo"][nome]["Frota"][tipo_base]["quantidade"]+=1
-        del(DG["jogadores_em_jogo"][nome]["Frota"][tipo_base]["Frota_em_jogo"][tipo])
-
-
     tabuleiro [posiçao[0]] [posiçao[1]] = 0
-
     if not result[0]:
         del(result[0]) #deleta o estatudo True or False
         for i in result:
             Remover_Navios(DG,nome,i[0]+1,chr(i[1]+65))
+    
+def Removido(DG,nome,linha,coluna):
+    posiçao=[linha-1,translator(coluna)]
+    tabuleiro=DG["jogadores_em_jogo"][nome]["tabuleiro"]
+    result=(bloco(DG,nome,posiçao[0],posiçao[1]))
+    tipo=tabuleiro [posiçao[0]] [posiçao[1]]
+    tipo_base=(list(tipo))[0]
+    DG["jogadores_em_jogo"][nome]["Frota"][tipo_base]["quantidade"]+=1
+    del(DG["jogadores_em_jogo"][nome]["Frota"][tipo_base]["Frota_em_jogo"][tipo])
 
 
 def Desistir(DG,nome1,nome2="não_tem"):
@@ -303,36 +301,41 @@ def Tiro(DG,nome,linha,coluna):
     tabuleiro=DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"]
     #---------------------------------Se-Falhar------------------------------------
     if tabuleiro[posiçao[0]][posiçao[1]] == 0:
-        DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
+        #DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
         return "Tiro na água."
-    elif tabuleiro[posiçao[0]][posiçao[1]] == "x":
-        return "Já disparou nessa posição."
+    #lif tabuleiro[posiçao[0]][posiçao[1]] == "x":
+        #return "Já disparou nessa posição."
     #---------------------------------Se-Acertar------------------------------------
     else:
         tipo=tabuleiro [posiçao[0]] [posiçao[1]]
         tipo_base=(list(tipo))[0]
-        DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]-=1
-        DG["jogadores_em_jogo"][nome]["Tiros_em_navios"].append(posiçao)
-        print(DG["jogadores_em_jogo"][nome]["Tiros_em_navios"])
-        if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]==0:
-            DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["navios_em_jogo"]-=1
-            DG["jogadores_em_jogo"][nome]["Navios_afundados"]+=1
-            del(DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo])
-            contador=0
-            for tipo_bases in DG["jogadores_em_jogo"][nome_adversario]["Frota"]:
-                if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_bases]["navios_em_jogo"]==0:
-                    contador+=1
-            if contador!=5:
-                DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
+        if posiçao in DG["jogadores_em_jogo"][nome]["Tiros_em_navios"]:
+            if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]==0:
                 return(f"Navio {tipo_base} afundado.")
             else:
-                Desistir(DG,nome_adversario)
-                return(f"Navio {tipo_base} afundado. Jogo terminado")
+                return("Tiro em navio.")
+        else:
+            DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]-=1
+            DG["jogadores_em_jogo"][nome]["Tiros_em_navios"].append(posiçao)
+            if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]==0:
+                DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["navios_em_jogo"]-=1
+                DG["jogadores_em_jogo"][nome]["Navios_afundados"]+=1
+                #del(DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo])
+                contador=0
+                for tipo_bases in DG["jogadores_em_jogo"][nome_adversario]["Frota"]:
+                    if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_bases]["navios_em_jogo"]==0:
+                        contador+=1
+                if contador!=5:
+                    #DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
+                    return(f"Navio {tipo_base} afundado.")
+                else:
+                    Desistir(DG,nome_adversario)
+                    return(f"Navio {tipo_base} afundado. Jogo terminado")
 
         
-        DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
+            #DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
         
-        return("Tiro em navio.")
+            return("Tiro em navio.")
 
 def Visualizar_Resultado(DG):
     result=[]
