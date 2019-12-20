@@ -330,7 +330,7 @@ def Tiro(DG,nome,linha,coluna):
                     return(f"Navio {tipo_base} afundado.")
                 else:
                     Desistir(DG,nome_adversario)
-                    return(f"Navio {tipo_base} afundado. Jogo terminado")
+                    return(f"Navio {tipo_base} afundado. Jogo terminado.")
 
         
             #DG["jogadores_em_jogo"][nome_adversario]["tabuleiro"][posiçao[0]][posiçao[1]]="x"
