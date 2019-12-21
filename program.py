@@ -1,5 +1,5 @@
 import comandos as cm
-
+#----------------------------------------------------------------------------------------------------------
 def consola(): #Consola
     orientacoes=["N","S","E","O"]
     DG=cm.Dicionario_Geral()
@@ -11,7 +11,7 @@ def consola(): #Consola
         if not line: # Sai do programa se o input for Nulo ou seja inexistente
             exit(0)
 
-        if command[0]=="RJ":
+        elif command[0]=="RJ":
             if len(command)!=2:
                 print("Instrução inválida.")
             elif not cm.Existe_Jogador(DG,command[1]):                
@@ -23,10 +23,8 @@ def consola(): #Consola
         elif command[0] == "EJ":
             if len(command)!=2:
                 print("Instrução inválida.")
-                
             elif cm.existe_jogador_em_jogo(DG,command[1]):
                 print("Jogador participa no jogo em curso.")
-
             elif  cm.Existe_Jogador(DG,command[1]) and not cm.existe_jogador_em_jogo(DG,command[1]):
                 cm.Remover_Jogadores(DG,command[1])
                 print('Jogador removido com sucesso.')
@@ -52,7 +50,6 @@ def consola(): #Consola
         elif command[0] == "print": #DEBUGING COMMAND
             if len(command)!=2:
                 print("Instrução inválida.")
-
             else:
                 cm.print_tabuleiro(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["tabuleiro"] )
                 print(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["Frota"])
@@ -112,8 +109,7 @@ def consola(): #Consola
                     print(cm.Tiro(DG,command[1],int(command[2]),command[3]))
                 else:
                     print("Não é a tua vez.")
-
-            
+ 
         elif command[0] == 'IC':
             if len(command) != 1:
                 print('Instrução inválida')
@@ -132,8 +128,6 @@ def consola(): #Consola
                 print(str(result[0]))
                 print(str(result[1]))
 
-
-
         elif command[0] == 'G':
             if len(command) != 1:
                 print('Instrução inválida') 
@@ -149,13 +143,6 @@ def consola(): #Consola
 
         else:
             print("Instrução inválida.")
-
-    
-
-    
-
 #-----------------------------------------------------------------------
-
-
 if __name__ == "__main__":
     consola()
