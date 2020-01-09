@@ -96,12 +96,12 @@ def consola(): #Consola
                 print('Instrução inválida.')
             elif not DG['jogo_em_curso']:
                 print('Não existe jogo em curso.')
-            elif not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J":
-                print("Posição irregular.")
             elif not DG["combate_em_curso"]:
                 print("Jogo em curso sem combate iniciado.")
             elif not cm.existe_jogador_em_jogo(DG,command[1]):
                 print('Jogador não participa no jogo em curso.')
+            elif not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J":
+                print("Posição irregular.")
             elif DG["Ronda"]=="":
                 DG["Ronda"]=command[1]
                 print(cm.Tiro(DG,command[1],int(command[2]),command[3]))
