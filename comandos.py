@@ -298,6 +298,7 @@ def Tiro(DG,nome,linha,coluna): #Dá tiros no tabuleiro do adversario do jogador
         tipo=tabuleiro [posiçao[0]] [posiçao[1]]
         tipo_base=(list(tipo))[0]
         if posiçao in DG["jogadores_em_jogo"][nome]["Tiros_em_navios"]:
+            DG["jogadores_em_jogo"][nome]["Tiros_em_navios"].append(posiçao)
             if DG["jogadores_em_jogo"][nome_adversario]["Frota"][tipo_base]["Frota_em_jogo"][tipo]==0:
                 return(f"Navio {tipo_base} afundado.")
             else:
