@@ -92,10 +92,12 @@ def consola(): #Consola
                 print("Desistência com sucesso. Jogo terminado.")
 
         elif command[0] == 'T':
-            if len(command)!=4 or not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J" :
+            if len(command)!=4:
                 print('Instrução inválida.')
             elif not DG['jogo_em_curso']:
                 print('Não existe jogo em curso.')
+            elif not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J":
+                print("Posição irregular.")
             elif not DG["combate_em_curso"]:
                 print("Jogo em curso sem combate iniciado.")
             elif not cm.existe_jogador_em_jogo(DG,command[1]):
@@ -112,13 +114,13 @@ def consola(): #Consola
  
         elif command[0] == 'IC':
             if len(command) != 1:
-                print('Instrução inválida')
+                print('Instrução inválida.')
             else: 
                 print(cm.Iniciar_combate(DG))
 
         elif command[0] == 'V':
             if len(command) != 1:
-                print('Instrução inválida')
+                print('Instrução inválida.')
             elif not DG['jogo_em_curso']:
                 print('Não existe jogo em curso.')
             elif not DG["combate_em_curso"]:
@@ -130,7 +132,7 @@ def consola(): #Consola
 
         elif command[0] == 'G':
             if len(command) != 1:
-                print('Instrução inválida') 
+                print('Instrução inválida.') 
             else:
                 print(cm.Gravar(DG))
 
@@ -145,4 +147,4 @@ def consola(): #Consola
             print("Instrução inválida.")
 #-----------------------------------------------------------------------
 if __name__ == "__main__":
-    consola()
+    consola() 
