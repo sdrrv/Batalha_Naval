@@ -329,12 +329,16 @@ def Visualizar_Resultado(DG):
     return result
 
 def Gravar(DG):
-    with open ('save.txt', 'wb') as f: 
-        pickle.dump(DG,f)
-    return ("Jogo gravado.")
+    try:
+        with open ('save.txt', 'wb') as f: 
+            pickle.dump(DG,f)
+        return ("Jogo gravado.")
+    except Exception as e:
+        return("Ocorreu um erro na gravação.")
 
 def Ler():
-    DG=None
-    with open ('save.txt', 'rb') as f:
-        DG = pickle.load(f)
-    return DG
+    try:
+        with open ('save.txt', 'rb') as f:
+            return [pickle.load(f),"Jogo carregado."]
+    except Exception as e:
+        return(["Ocorreu um erro no carregamento."])
