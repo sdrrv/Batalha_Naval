@@ -55,7 +55,11 @@ def consola(): #Consola
                 print(DG["jogadores_em_jogo"][list ( DG["jogadores_em_jogo"].keys() ) [ int(command[1]) ] ] ["Frota"])
         
         elif command[0] == 'CN':
-            if command[2]=="L" and len(command)==5:
+            if len(command)!=5 and len(command)!=6:
+                print("Instrução inválida.")
+            elif DG["combate_em_curso"]:
+                print("Combate já se encontra iniciado.")
+            elif command[2]=="L" and len(command)==5:
                 print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4]))
             elif len(command)==6:
                 print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4],command[5]))
@@ -63,12 +67,16 @@ def consola(): #Consola
                 print('Instrução inválida.')
         
         elif command[0] == 'RN':
-            if len(command)!=4 or not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J":
+            if len(command)!=4 :
                 print('Instrução inválida.')
+            elif DG["combate_em_curso"]:
+                print("Combate já se encontra iniciado.")
             elif DG['jogo_em_curso'] == False:
                 print('Não existe jogo em curso.')
             elif not cm.existe_jogador_em_jogo(DG,command[1]):
                 print('Jogador não participa no jogo em curso.')
+            elif not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J":
+                print('Instrução inválida.')
             elif DG["jogadores_em_jogo"][command[1]]["tabuleiro"][int(command[2])-1][cm.translator(command [3])] == 0 :
                 print('Não existe navio na posição.')
             else:
@@ -96,12 +104,12 @@ def consola(): #Consola
                 print('Instrução inválida.')
             elif not DG['jogo_em_curso']:
                 print('Não existe jogo em curso.')
-            elif not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J":
-                print("Posição irregular.")
             elif not DG["combate_em_curso"]:
                 print("Jogo em curso sem combate iniciado.")
             elif not cm.existe_jogador_em_jogo(DG,command[1]):
                 print('Jogador não participa no jogo em curso.')
+            elif not 1 <= int(command[2]) <= 10 or not "A"<=command[3]<="J":
+                print("Posição irregular.")
             elif DG["Ronda"]=="":
                 DG["Ronda"]=command[1]
                 print(cm.Tiro(DG,command[1],int(command[2]),command[3]))
@@ -140,8 +148,12 @@ def consola(): #Consola
             if len(command) != 1:
                 print('Instrução inválida') 
             else:
-                DG=cm.Ler()
-                print("Jogo carregado.")
+                load=cm.Ler()
+                if len(load)==1:
+                    print(load[0])
+                else:    
+                    DG=load[0]
+                    print(load[1])
 
         else:
             print("Instrução inválida.")
