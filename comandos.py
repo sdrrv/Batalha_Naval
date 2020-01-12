@@ -52,11 +52,8 @@ def Dicionario_Geral():
 #--------------------------------------------------------------------------------
 
 def Existe_Jogador(DG,nome):            #Função que verifica se existe um jogador
-    if nome in DG["jogadores"].keys():
-        return True
-    return False
+    return nome in DG["jogadores"]
     
-
 def Registar_Jogadores(DG,nome):        #Adiciona o jogador ao dicionário 
     DG["jogadores"][nome]={
         "vitorias":0,
@@ -64,30 +61,20 @@ def Registar_Jogadores(DG,nome):        #Adiciona o jogador ao dicionário
         }
     return DG
 
-
 def existe_jogador_em_jogo(DG, nome):              # Função que verifica se existe um jogador em jogo 
-    for jogador in DG["jogadores_em_jogo"].keys():
-        if jogador==nome:
-            return True
-    return False
+    return nome in DG["jogadores_em_jogo"]
     
-
 def Remover_Jogadores(DG, nome):          #Retira o jogador do dicionário.
     del DG["jogadores"][nome]
     
-
 def sort_jogadores(DG):                     # Ordena os jogadores por ordem alfabética
     return sorted(DG["jogadores"].keys())
 
 def Listar_Jogadores(DG):                    #Lista os jogadores que foram introduizods pelo comando "IJ" por ordem alfabética
-    Lista=[]
-    for i in sort_jogadores(DG):
-        Lista.append(i)
-    return Lista
+    return [i for i in sort_jogadores(DG)]
                   
-
 def Iniciar_Jogo(DG,nome1,nome2):             #Inicia o jogo com os dois jogadores introduzidos. Criamos também um tabuleiro, classificação e frota para cada jogador.
-    if DG["jogo_em_curso"]==True:
+    if DG["jogo_em_curso"]:
         return("Existe um jogo em curso.")
 
     elif Existe_Jogador(DG, nome1) and Existe_Jogador(DG, nome2):
@@ -218,7 +205,7 @@ def Colocar_Navios(DG,nome,tipo,linha,coluna,orientaçao="não_tem"): #Coloca na
                 DG["jogadores_em_jogo"][nome]["Frota"][tipo]["quantidade"]-=1
                 contador=DG["jogadores_em_jogo"][nome]["Frota"][tipo]["contador"] # o contador permite criar um barco com um id unico, sempre que se o coloca.
                 DG["jogadores_em_jogo"][nome]["Frota"][tipo]["Frota_em_jogo"][f"{tipo}{contador}"]=tamanho #Adicina o numero de navios ao tipo
-                for i in range(0,tamanho): #Coloca os navios.
+                for i in range(tamanho): #Coloca os navios.
                     if orientaçao=="O" or orientaçao=="não_tem":
                         tabuleiro[posiçao[0]] [posiçao[1]-i]=(f"{tipo}{contador}")
                     elif orientaçao=="E":
@@ -272,7 +259,7 @@ def Desistir(DG,nome1,nome2="não_tem"):           #FF aos 15
     DG["Ronda"]=""
 
 def Iniciar_combate(DG):                                    #Inicia o combate quanto todos os navios tiverem colocados 
-    if DG["jogo_em_curso"]==False:
+    if not DG["jogo_em_curso"]:
         return("Não existe jogo em curso.")
     else:
         for jogador in DG["jogadores_em_jogo"]:

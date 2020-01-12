@@ -58,7 +58,7 @@ def consola(): #Consola
             if len(command)!=5 and len(command)!=6:
                 print("Instrução inválida.")
             elif DG["combate_em_curso"]:
-                print("Combate já se encontra iniciado.")
+                print("Não é possivel colocar navios.")
             elif command[2]=="L" and len(command)==5:
                 print(cm.Colocar_Navios(DG,command[1],command[2],int(command[3]),command[4]))
             elif len(command)==6:
